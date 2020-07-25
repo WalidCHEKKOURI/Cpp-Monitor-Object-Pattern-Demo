@@ -9,7 +9,7 @@ template <class T>
 class MessageQueue
 {
 public:
-    T receive()
+    T receive()//Consumer
     {
         // perform queue modification under the lock
         std::unique_lock<std::mutex> uLock(_mutex);
@@ -22,7 +22,7 @@ public:
         return msg; // will not be copied due to return value optimization (RVO) in C++
     }
 
-    void send(T &&msg)
+    void send(T &&msg)//Producer
     {
         // simulate some work
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -56,7 +56,7 @@ int main()
     }
 
     std::cout << "Collecting results..." << std::endl;
-    while (true)
+    while (true)//consumes a new element in the queue when it's available, wakes up when a new element is available in the queue
     {
         int message = queue->receive();
         std::cout << "   Message #" << message << " has been removed from the queue" << std::endl;
